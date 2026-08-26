@@ -19,7 +19,7 @@ const NIGHTFALL_DECRYPTION_DATA=Object.freeze([
   {sentence:'Several hidden devices ___ (just/discover) beneath the city.',before:'Several hidden devices ',after:' (just/discover) beneath the city.',answer:'have just been discovered'},
   {sentence:'We believe the evidence you collected ___ (help) us uncover the truth.',before:'We believe the evidence you collected ',after:' (help) us uncover the truth.',answer:'will help'}
 ]);
-const AUDIO_TRACKS = Object.freeze({cityRain:`${ASSET_ROOTS.optimized}/sounds/city_rain.mp3`,underground:`${ASSET_ROOTS.optimized}/sounds/underground.mp3`,danger:`${ASSET_ROOTS.optimized}/sounds/danger.mp3`,exploration:'assets/sounds/exploration_quiet.mp3',finalEscape:`${ASSET_ROOTS.optimized}/sounds/final_escape.mp3`});
+const AUDIO_TRACKS = Object.freeze({cityRain:`${ASSET_ROOTS.optimized}/sounds/city_rain.mp3`,underground:`${ASSET_ROOTS.optimized}/sounds/underground.mp3`,danger:`${ASSET_ROOTS.optimized}/sounds/danger.mp3`,exploration:'assets/sounds/exploration_quiet2.mp3',finalEscape:`${ASSET_ROOTS.optimized}/sounds/final_escape.mp3`});
 const BACKGROUND_TRACK_GAINS=Object.freeze({exploration:.08,cityRain:.08});
 const GRAMMAR_DATA = Object.freeze([
   {sentence:'Oh no! The lights ___!',options:['go out','went out','have gone out','are going out'],answer:'have gone out'},
