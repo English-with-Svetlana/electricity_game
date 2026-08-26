@@ -26,7 +26,7 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 - **Route progression:** Sequential route map containing Service Tunnels, City Streets, and Main Bridge.
 - **Project Nightfall:** The five collectible pickups, `5/5` confirmation, four-line decryption terminal, classified-file reveal, CASE SOLVED sequence, and single final MISSION COMPLETE flow are implemented.
 - **Shared UI:** The current grammar games use the shared clean question panel at `assets/ui/question_panel_clean.png`; original UI artwork remains in `assets/ui/`.
-- **Audio:** Exploration music begins after the initial user gesture. Ambience/music is lazy-started through the shared audio manager, with persistent music, SFX, and mute settings.
+- **Audio:** `assets/optimized/sounds/exploration.mp3` is the only background-music track and loops continuously from the initial mission gesture through the final screen without scene-transition restarts or duplicate instances. Its base gain is `0.08 × the user music slider`. The shared music channel normalizes every music request to Exploration; environmental/location ambience remains on separate playback paths, and all SFX retain their existing controls and volumes.
 
 ## 2. Current progression: Games 1–12
 
