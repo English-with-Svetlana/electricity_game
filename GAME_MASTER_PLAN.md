@@ -6,7 +6,7 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 
 ### Authority order
 
-1. **Current working code and newer approved rules** are authoritative for implemented Games 1–5, the sequential route structure, Energy, Lives, Backpack, HUD, UI, audio, DEV mode, scoring, and current progression.
+1. **Current working code and newer approved rules** are authoritative for implemented Games 1–12, the sequential route structure, Energy, Lives, Backpack, HUD, UI, audio, DEV mode, scoring, Project Nightfall, and final progression.
 2. **`BLACKOUT_GRAMMAR_MASTER.md`** is the authoritative source for the originally approved grammar content and planned Games 1–12. It must remain in the repository unchanged as the original grammar/gameplay source.
 3. Where the grammar master conflicts with the current implementation or newer approved rules, the current implementation/newer rule wins and the older rule is marked **SUPERSEDED** in this plan.
 4. Future content is documented exactly as recovered. Route-dependent alternatives are not remapped into the newer sequential structure until explicitly approved.
@@ -21,14 +21,14 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 - **Energy:** Starts at 100 and persists across questions, games, and routes. Correct answers cause no Energy loss. Every wrong normal-game answer removes exactly 5 Energy. Energy does not drain with time. At 0 Energy, gameplay is disabled until an available Energy supply is consumed; Water Bottle, Chocolate Bar, or Batteries restore Energy fully to the maximum of 100 and are removed from inventory. First Aid Kit is not an Energy item.
 - **Score:** Every correct normal-game answer currently awards 100 points. Rescue answers do not award normal question points.
 - **Timer:** Mission elapsed time starts when the mission begins and updates once per second.
-- **Secrets:** Five persistent mission collectibles now drive the HUD from `0/5` through `5/5`. Each unique collectible can be collected once per mission and never enters the normal Backpack.
+- **Secrets:** Five persistent mission collectibles drive the HUD from `0/5` through `5/5`. Each unique ID can be collected once per mission, never enters the normal Backpack, and receives later fallback render opportunities if missed. The HUD cannot exceed `5/5`.
 - **Backpack / inventory:** Four-slot inventory associated with Game 3 rewards: Water Bottle, First Aid Kit, Chocolate Bar, and Batteries. The HUD displays the collected count; the backpack popup displays collected and empty slots.
 - **Route progression:** Sequential route map containing Service Tunnels, City Streets, and Main Bridge.
 - **Project Nightfall:** The five collectible pickups, `5/5` confirmation, four-line decryption terminal, classified-file reveal, CASE SOLVED sequence, and single final MISSION COMPLETE flow are implemented.
 - **Shared UI:** The current grammar games use the shared clean question panel at `assets/ui/question_panel_clean.png`; original UI artwork remains in `assets/ui/`.
 - **Audio:** Exploration music begins after the initial user gesture. Ambience/music is lazy-started through the shared audio manager, with persistent music, SFX, and mute settings.
 
-## 2. Current progression: Games 1–6
+## 2. Current progression: Games 1–12
 
 ### Game 1 — Emergency Phone
 
@@ -125,7 +125,7 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 - **Scoring:** +100 for each completed module; maximum normal-question score is 400.
 - **Energy effects:** Correct pair costs 0 Energy. Each incorrect submission removes exactly 5 persistent Energy. The existing Energy recovery overlay and eligible inventory supplies are reused at 0.
 - **Life effects:** Each module starts with 3 lives. Each incorrect submission removes 1 life. At 0, the existing Emergency Rescue opens; successful rescue returns to the same Game 6 module.
-- **Completion behavior:** Displays `BRIDGE WARNING SYSTEM RESTORED ✓` / `GAME 6 COMPLETE`, followed by the next approved Main Bridge objective `ROOFTOP SIGNAL INTERCEPT`. Game 7 is not implemented and Main Bridge is not marked complete yet.
+- **Completion behavior:** Displays `BRIDGE WARNING SYSTEM RESTORED ✓` / `GAME 6 COMPLETE`, then continues to implemented Game 7 — Rooftop Signal Intercept.
 - **Important UI/animation behavior:** Cinematic bridge scene uses efficient CSS rain, fog/vignette, lightning, warning-light flicker, subtle background drift, module pulses, and physical status restoration. Removing the scene DOM through the shared `clearScreen()` cleanup removes the animation state without persistent animation loops or listeners. Reduced-motion rules remain supported.
 - **Assets used:**
   - `assets/optimized/backgrounds/bridge.webp`
@@ -136,9 +136,9 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 
 - **Status:** IMPLEMENTED.
 - **Location / route:** Main Bridge rooftops, immediately after Game 6.
-- **Mechanic:** Four readable moving answer drones per question, with randomized flight lanes and varied speeds over efficient rain, fog, lightning, beacon, and distant-light effects.
+- **Mechanic:** Four readable moving answer drones per question, with randomized flight lanes and varied speeds over the rooftop environment. The former animated rain overlay has been removed.
 - **Questions / rounds:** 4 fixed approved tasks. Correct answers lock one signal, award +100, and advance; wrong answers remain on the same task, remove 1 life and exactly 5 persistent Energy, and reuse existing recovery systems.
-- **Completion behavior:** Displays `SIGNAL INTERCEPT COMPLETE ✓` / `EVACUATION CHANNEL ACQUIRED`, completes Main Bridge, and prepares `GAME 8 — RESTORE THE TIMELINE` without implementing Game 8.
+- **Completion behavior:** Displays `SIGNAL INTERCEPT COMPLETE ✓` / `EVACUATION CHANNEL ACQUIRED`, completes Main Bridge, and proceeds to implemented Game 8 — Train Timeline.
 - **Assets used:** `assets/optimized/backgrounds/rooftops.webp` and `assets/optimized/interactive/drone.png`.
 - **DEV shortcut:** `?dev=game7`.
 
@@ -159,15 +159,15 @@ The current route sequence is strictly sequential:
 3. **Main Bridge**
    - Locked until City Streets is complete.
    - Becomes the final available route after Game 5.
-   - Selecting it now enters the implemented Game 6 — Bridge Warning System.
-   - Game 6 is completable, but Game 7 is not implemented, so Main Bridge is not yet marked complete.
+   - Selecting it enters Game 6 — Bridge Warning System, followed by Game 7 — Rooftop Signal Intercept.
+   - Completing Game 7 sets `mainBridgeCompleted = true` and continues into Game 8.
 
 ### Current normal-play state at the implementation boundary
 
 - Service Tunnels: implemented and completable.
 - City Streets: implemented and completable.
-- Main Bridge: unlockable/selectable; Game 6 is implemented, while later Main Bridge progression is not yet complete.
-- An `ALL ROUTES COMPLETE` / `CITY NETWORK MAPPED` state exists for when all three completion flags are true, but current normal gameplay cannot reach it because Main Bridge still requires its later stage(s).
+- Main Bridge: implemented and completable through Games 6–7.
+- Normal progression can complete all three route flags and continue through Games 8–12, Project Nightfall, and the final results flow.
 
 ## 4. Confirmed future asset/mechanic sets — no game numbers assigned
 
@@ -247,7 +247,7 @@ These sets are confirmed by existing assets and their visible labels. Their fina
 - `assets/ui/results_panel.png`
 - Apparent concepts: highway escape, evacuation checkpoint, helicopter extraction, final escape sequence, and normal mission results.
 
-### H. Project Nightfall / TRUE ENDING
+### H. Project Nightfall / final ending
 
 - Secret location:
   - `assets/backgrounds/secret_lab_nightfall.png`
@@ -261,12 +261,14 @@ These sets are confirmed by existing assets and their visible labels. Their fina
 - Unlock and discovery sounds:
   - `assets/sounds/nightfall_unlock.wav`
   - `assets/sounds/secret_found.wav`
-- TRUE ENDING panel:
-  - `assets/ui/nightfall_true_ending.png`
-- Confirmed condition shown by the ending artwork: collecting all five secret items (`5/5`) unlocks the TRUE ENDING.
+- Legacy TRUE ENDING artwork remains available at `assets/ui/nightfall_true_ending.png`, but the current game uses one unified ending flow rather than separate normal/true-ending branches.
 - Runtime placements are fixed as follows: Medallion in Home Bedroom, USB in Game 2 / Blackout Street, Processor in Game 4 / Service Tunnels, Field Notes in Game 6 / Main Bridge, and Core in Game 10 / Secret Laboratory.
 - Collection state is stored in `state.collectedSecrets`; `state.secrets` mirrors its capped length for the persistent HUD. `secret_found.wav` plays for every unique pickup. The fifth pickup also plays `nightfall_unlock.wav` and displays `PROJECT NIGHTFALL — 5/5 SECRETS RECOVERED` without interrupting Game 10.
-- After Game 12 evacuation completes, a `5/5` mission continues through the classified transmission, Nightfall decryption, classified reveal, CASE SOLVED, and final runtime results. Fewer than five secrets shows the approved incomplete-data fallback without creating another ending.
+- Missed-ID fallback chain: Medallion reappears in Game 2, USB in Game 4, Processor in Game 6, Field Notes in Game 10, and all remaining missing IDs appear together in Game 12. These are additional render opportunities for the same IDs, never new collectibles.
+- Game 12 is the final collection safety net. If evacuation tasks reach 100% while any IDs remain missing, helicopter departure is held and `PROJECT NIGHTFALL SIGNAL DETECTED` appears briefly. The missing objects remain clickable until the player genuinely reaches `5/5`; nothing is awarded automatically.
+- Duplicate prevention is authoritative: every render checks `state.collectedSecrets`; every click rejects an already-stored ID; `state.secrets` mirrors the unique-ID count and is capped at five. Collected IDs persist across games and reset only with a full mission reset / PLAY AGAIN.
+- Fallback DEV states: `?dev=fallback-game2-medallion`, `?dev=fallback-game4-usb`, `?dev=fallback-game6-processor`, `?dev=fallback-game10-field-notes`, `?dev=fallback-game12-core`, `?dev=fallback-game12-two`, and `?dev=fallback-game12-complete`.
+- After Game 12 evacuation completes, a `5/5` mission continues through the classified transmission, Nightfall decryption, classified reveal, CASE SOLVED, and final runtime results. There is no second ending branch.
 
 ## 5. Originally approved Games 6–12
 
@@ -469,7 +471,7 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 
 ### Game 11 — Emergency Transmission
 
-- **Current status:** **IMPLEMENTED.** Four fixed two-input grammar packets unlock 15-second transmission windows in which the moving helicopter must be clicked inside the active signal zone. Misses and reconnects carry no penalties; grammar errors reuse existing rules. Helicopter ambience is Game-11-local, loops at exactly `0.06`, and stops on Rescue/exit. Direct development shortcut: `?dev=game11`.
+- **Current status:** **IMPLEMENTED.** Four fixed two-input grammar packets unlock 15-second transmission windows in which the moving helicopter must be clicked inside the active signal zone. Misses and reconnects carry no penalties; grammar errors reuse existing rules. Helicopter ambience is Game-11-local, loops at exactly `0.03`, and stops on Rescue/exit. Direct development shortcut: `?dev=game11`.
 
 - **Instruction:** `Complete the message with the correct verb forms.`
 - **Mechanic:** Timed/countdown transmission restoration with double-gap messages.
@@ -494,8 +496,11 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 - **Heading:** `FINAL EVACUATION CLEARANCE`
 - **Instruction:** `Complete all four tasks to authorize evacuation.`
 - **Mechanic:** Four selectable environmental stations with clearance progress `0 → 25 → 50 → 75 → 100%`. Passenger registration uses multiple choice; landing lights use a typed form and sequential light activation; the security gate uses mistake selection/correction and a separately animated barrier; the landing zone requires pointer dragging three obstacles outside the marked area before its double-gap task.
+- **Persistent station layout:** Register Passengers is top-left, Landing Zone is top-right, Landing Lights is bottom-left, and Security Gate is bottom-right. The central circular landing pad remains open throughout play and is not rearranged when the helicopter arrives.
 - **Rounds:** 4.
-- **Completion:** `CLEARANCE 100%`; `FINAL CLEARANCE COMPLETE ✓`; `EVACUATION AUTHORIZED`; helicopter arrival and evacuation.
+- **Secret safety gate:** Every still-missing Nightfall ID is rendered in the Game 12 environment. At four completed stations, departure pauses at `PROJECT NIGHTFALL SIGNAL DETECTED` if the HUD is below `5/5`; the player must click every remaining item before authorization continues.
+- **Completion:** `CLEARANCE 100%`; `FINAL CLEARANCE COMPLETE ✓`; `EVACUATION AUTHORIZED`; the cleared obstacle graphics remain off the landing pad; the helicopter flies in, descends into the open center of the marked pad, and stops. Only after landing does the compact bottom-center `EVACUATION COMPLETE` message appear. After a short cinematic pause, the scene darkens and proceeds to the classified transmission.
+- **Life / Energy / score:** Existing Game 12 grammar mistakes retain the shared Life and exact `-5 Energy` rules; each successfully completed station awards the current normal +100 score. Collecting Nightfall items does not alter these values.
 - **Associated assets:** `assets/backgrounds/evacuation_point.png`, passenger terminal, landing lights, split security-gate base/barrier, conveyor box obstacles, helicopter, and the existing quiet helicopter ambience at `0.03`.
 
 1. **Choose**
@@ -527,8 +532,7 @@ The five rescue questions and the `3/5` success threshold match the current impl
 ### Project Nightfall — Secret Challenge
 
 - **Unlock condition:** Only at `5/5` secret collectibles.
-- **Title:** `DECRYPT THE NIGHTFALL FILE`
-- **Instruction:** `Complete all four gaps to unlock the classified file.`
+- **Header:** `PROJECT NIGHTFALL`; `CLASSIFIED // LEVEL 5`; `DECRYPT THE CLASSIFIED FILE`.
 - **Penalty rule:** No Energy or Lives are removed in this challenge.
 - **Interaction:** Correct fields turn green and lock; incorrect fields remain editable.
 
@@ -548,10 +552,28 @@ After 4/4:
 - `DECRYPTION 100%`
 - `CLASSIFIED FILE UNLOCKED`
 - Play `assets/sounds/nightfall_unlock.wav`
-- Display `PROJECT NIGHTFALL — TRUE ENDING`
 - Award `MASTER COLLECTOR`
 
-The approved content is implemented as one four-row terminal. Correct rows lock independently and advance the classified reveal by 25%; wrong answers remain editable without Life or Energy penalties. Completing all four rows awards the confirmed `MASTER COLLECTOR` achievement, reveals the classified story, and proceeds to the single final mission-results screen.
+The approved content is implemented as one four-row terminal over the existing Nightfall laboratory background. All four tasks are visible simultaneously. Correct rows lock independently and advance decryption `0% → 25% → 50% → 75% → 100%`; wrong answers remain editable without Life, Energy, Emergency Rescue, or score effects.
+
+After `CLASSIFIED FILE UNLOCKED`, the final classified report types onto a centered futuristic terminal over approximately 6–8 seconds, with a blinking cursor and the five recovered evidence objects arranged around the terminal. The complete report remains visible until the player clicks `CONTINUE`:
+
+- `The blackout was not an accident.`
+- `Several hidden devices beneath the city caused the power failures.`
+- `The devices have now been disabled.`
+- `The city is safe.`
+
+`CONTINUE` displays `PROJECT NIGHTFALL — CASE SOLVED` for approximately 2–3 seconds and then enters the single final results screen.
+
+### Final Mission Complete screen
+
+- **Ending rule:** One ending flow only; no separate normal and true endings.
+- **Background:** Existing cinematic `assets/backgrounds/evacuation_point.png` with a restrained readability overlay.
+- **Heading:** `MISSION COMPLETE`, with `PROJECT NIGHTFALL — CASE SOLVED` beneath it.
+- **Runtime results:** Displays the actual final `state.score`, elapsed mission time, and real `${state.secrets}/5` value rather than hard-coded Score or Time.
+- **Achievement behavior:** Decrypting all four Nightfall rows awards the confirmed `MASTER COLLECTOR` state and displays the existing enlarged `master_collector.png` badge. Only IDs actually present in `state.achievements` are rendered; no other achievements are invented or automatically awarded.
+- **PLAY AGAIN:** Uses the existing full reset architecture. It resets Lives, Energy, Score, timer state, inventory, collected secret IDs, HUD secrets to `0/5`, route/game completion state, and returns to the normal BLACKOUT start flow.
+- **DEV shortcuts:** `?dev=nightfall` opens the valid `5/5` decryption state; `?dev=ending` opens representative DEV-only final results without affecting normal gameplay.
 
 ## 7. Superseded master-plan conflicts
 
@@ -583,7 +605,7 @@ The following older master rules must not overwrite the current tested game:
 - Recorded all identified conflicts with current Games 1–5, sequential routes, Energy, and Emergency Rescue as superseded older rules.
 - Implemented current Game 6 — Bridge Warning System as the approved Main Bridge route variant, with four exact double-gap grammar tasks, current global penalties/recovery, cinematic bridge effects, route entry, completion handoff, and `?dev=game6` testing support.
 - Implemented Main Bridge Game 7 — Rooftop Signal Intercept with four locked moving-drone tasks, existing penalties/recovery, Main Bridge completion, Game 8 handoff, and `?dev=game7` testing support.
-- Implemented the five Project Nightfall environmental collectibles with persistent per-mission duplicate-safe state, HUD `0/5` integration, shared pickup presentation, pickup/unlock sounds, fixed scene placements, and DEV scene histories; the Nightfall challenge and TRUE ENDING remain deliberately unlaunched.
+- Initially implemented the five Project Nightfall environmental collectibles with persistent per-mission duplicate-safe state, HUD `0/5` integration, shared pickup presentation, pickup/unlock sounds, fixed scene placements, and DEV scene histories; the later ending branch was implemented in the subsequent steps below.
 - Implemented the post–Game 12 Project Nightfall ending flow, including the classified transition, one-screen four-line decryption challenge, progressive file decoding, classified story, CASE SOLVED moment, actual Score/Time results, earned-only achievement display, complete PLAY AGAIN reset, and `?dev=nightfall` / `?dev=ending` shortcuts.
 - Updated Nightfall line 3 and its decoded story to the approved plural-device wording; the complete classified file now remains visible until CONTINUE, and the final results use the cinematic evacuation background with expanded statistics and achievement presentation.
 - Refined the classified-file reveal into a centered futuristic terminal with a 6–8 second character-by-character report, blinking cursor, delayed CONTINUE control, and the five evidence assets arranged systematically around—but never over—the terminal.
