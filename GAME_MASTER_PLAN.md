@@ -17,18 +17,18 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
 - **Format:** Browser-based educational survival and grammar game designed around a fixed, proportionally scaled 16:9 game viewport.
 - **Persistent gameplay shell:** Shared HUD and shared gameplay architecture are reused across implemented games.
 - **Lives:** Each normal question starts with 3 lives. Each wrong answer removes exactly 1 life. Reaching 0 lives launches the shared Emergency Rescue system. First Aid Kit is reserved for Lives, not Energy; no First Aid Kit consumption behavior is currently implemented.
-- **Emergency Rescue:** Five multiple-choice questions; at least 3 correct answers are required to continue. A failed rescue can be retried. Successful recovery behavior is adapted to the interrupted game.
+- **Emergency Rescue:** Uses a fixed approved pool of 30 questions that must not be auto-generated. Each attempt randomly selects 5 unique questions, excluding all 5 questions used in the immediately previous attempt. At least 3 correct answers are required to continue. A failed rescue can be retried. Successful recovery behavior is adapted to the interrupted game.
 - **Energy:** Starts at 100 and persists across questions, games, and routes. Correct answers cause no Energy loss. Every wrong normal-game answer removes exactly 5 Energy. Energy does not drain with time. At 0 Energy, gameplay is disabled until an available Energy supply is consumed; Water Bottle, Chocolate Bar, or Batteries restore Energy fully to the maximum of 100 and are removed from inventory. First Aid Kit is not an Energy item.
 - **Score:** Every correct normal-game answer currently awards 100 points. Rescue answers do not award normal question points.
 - **Timer:** Mission elapsed time starts when the mission begins and updates once per second.
-- **Secrets:** Persistent HUD counter is `0/5`. State exists, but collection and Nightfall unlock logic are not implemented yet.
+- **Secrets:** Five persistent mission collectibles now drive the HUD from `0/5` through `5/5`. Each unique collectible can be collected once per mission and never enters the normal Backpack.
 - **Backpack / inventory:** Four-slot inventory associated with Game 3 rewards: Water Bottle, First Aid Kit, Chocolate Bar, and Batteries. The HUD displays the collected count; the backpack popup displays collected and empty slots.
 - **Route progression:** Sequential route map containing Service Tunnels, City Streets, and Main Bridge.
-- **Project Nightfall:** Confirmed future secret system represented by five collectible assets, a secret laboratory, unlock sounds, and a TRUE ENDING panel. Runtime collection/unlock logic is not implemented.
+- **Project Nightfall:** The five collectible pickups, `5/5` confirmation, four-line decryption terminal, classified-file reveal, CASE SOLVED sequence, and single final MISSION COMPLETE flow are implemented.
 - **Shared UI:** The current grammar games use the shared clean question panel at `assets/ui/question_panel_clean.png`; original UI artwork remains in `assets/ui/`.
 - **Audio:** Exploration music begins after the initial user gesture. Ambience/music is lazy-started through the shared audio manager, with persistent music, SFX, and mute settings.
 
-## 2. Current progression: Games 1–5
+## 2. Current progression: Games 1–6
 
 ### Game 1 — Emergency Phone
 
@@ -115,6 +115,33 @@ This file is the single source of truth for confirmed BLACKOUT gameplay, UI, pro
   - `assets/ui/question_panel_clean.png`
   - shared HUD, feedback, inventory, rescue, and audio assets
 
+### Game 6 — Bridge Warning System
+
+- **Location / route:** Main Bridge; entered after Service Tunnels and City Streets are completed in the current sequential route flow.
+- **Approved variant:** Main Bridge Game 6 from `BLACKOUT_GRAMMAR_MASTER.md`. The Service Tunnels and City Streets Game 6 variants remain documented historical route alternatives and are not substituted into the current Main Bridge state.
+- **Grammar focus:** Past Continuous with Past Simple Passive; Present Perfect with Present Simple; Past Perfect Passive with Past Simple; Present Perfect Continuous with Present Perfect Passive.
+- **Mechanic:** Four physical warning-system modules. Each task embeds two typed verb-form controls in a bridge control console. A correct pair restores a module and advances the warning/barrier status.
+- **Questions / rounds:** 4, using the exact approved Main Bridge Game 6 sentences and answers documented in Section 5.
+- **Scoring:** +100 for each completed module; maximum normal-question score is 400.
+- **Energy effects:** Correct pair costs 0 Energy. Each incorrect submission removes exactly 5 persistent Energy. The existing Energy recovery overlay and eligible inventory supplies are reused at 0.
+- **Life effects:** Each module starts with 3 lives. Each incorrect submission removes 1 life. At 0, the existing Emergency Rescue opens; successful rescue returns to the same Game 6 module.
+- **Completion behavior:** Displays `BRIDGE WARNING SYSTEM RESTORED ✓` / `GAME 6 COMPLETE`, followed by the next approved Main Bridge objective `ROOFTOP SIGNAL INTERCEPT`. Game 7 is not implemented and Main Bridge is not marked complete yet.
+- **Important UI/animation behavior:** Cinematic bridge scene uses efficient CSS rain, fog/vignette, lightning, warning-light flicker, subtle background drift, module pulses, and physical status restoration. Removing the scene DOM through the shared `clearScreen()` cleanup removes the animation state without persistent animation loops or listeners. Reduced-motion rules remain supported.
+- **Assets used:**
+  - `assets/optimized/backgrounds/bridge.webp`
+  - shared HUD, feedback, inventory, Energy recovery, Emergency Rescue, and audio assets
+- **DEV shortcut:** `?dev=game6`, with optional current Energy override such as `?dev=game6&energy=10`; initializes completed prior routes and the four Game 3 inventory supplies.
+
+### Game 7 — Rooftop Signal Intercept
+
+- **Status:** IMPLEMENTED.
+- **Location / route:** Main Bridge rooftops, immediately after Game 6.
+- **Mechanic:** Four readable moving answer drones per question, with randomized flight lanes and varied speeds over efficient rain, fog, lightning, beacon, and distant-light effects.
+- **Questions / rounds:** 4 fixed approved tasks. Correct answers lock one signal, award +100, and advance; wrong answers remain on the same task, remove 1 life and exactly 5 persistent Energy, and reuse existing recovery systems.
+- **Completion behavior:** Displays `SIGNAL INTERCEPT COMPLETE ✓` / `EVACUATION CHANNEL ACQUIRED`, completes Main Bridge, and prepares `GAME 8 — RESTORE THE TIMELINE` without implementing Game 8.
+- **Assets used:** `assets/optimized/backgrounds/rooftops.webp` and `assets/optimized/interactive/drone.png`.
+- **DEV shortcut:** `?dev=game7`.
+
 ## 3. Route system
 
 The current route sequence is strictly sequential:
@@ -132,15 +159,15 @@ The current route sequence is strictly sequential:
 3. **Main Bridge**
    - Locked until City Streets is complete.
    - Becomes the final available route after Game 5.
-   - Selecting it currently displays `MAIN BRIDGE SELECTED` / `Route gameplay will continue here.`
-   - No Main Bridge gameplay currently sets `mainBridgeCompleted = true` through normal progression.
+   - Selecting it now enters the implemented Game 6 — Bridge Warning System.
+   - Game 6 is completable, but Game 7 is not implemented, so Main Bridge is not yet marked complete.
 
 ### Current normal-play state at the implementation boundary
 
 - Service Tunnels: implemented and completable.
 - City Streets: implemented and completable.
-- Main Bridge: unlockable/selectable but not implemented or completable through normal play.
-- An `ALL ROUTES COMPLETE` / `CITY NETWORK MAPPED` state exists for when all three completion flags are true, but current normal gameplay cannot reach it because Main Bridge has no implementation.
+- Main Bridge: unlockable/selectable; Game 6 is implemented, while later Main Bridge progression is not yet complete.
+- An `ALL ROUTES COMPLETE` / `CITY NETWORK MAPPED` state exists for when all three completion flags are true, but current normal gameplay cannot reach it because Main Bridge still requires its later stage(s).
 
 ## 4. Confirmed future asset/mechanic sets — no game numbers assigned
 
@@ -237,7 +264,9 @@ These sets are confirmed by existing assets and their visible labels. Their fina
 - TRUE ENDING panel:
   - `assets/ui/nightfall_true_ending.png`
 - Confirmed condition shown by the ending artwork: collecting all five secret items (`5/5`) unlocks the TRUE ENDING.
-- Runtime secret placement, collection, unlock, laboratory progression, and TRUE ENDING display logic remain unimplemented.
+- Runtime placements are fixed as follows: Medallion in Home Bedroom, USB in Game 2 / Blackout Street, Processor in Game 4 / Service Tunnels, Field Notes in Game 6 / Main Bridge, and Core in Game 10 / Secret Laboratory.
+- Collection state is stored in `state.collectedSecrets`; `state.secrets` mirrors its capped length for the persistent HUD. `secret_found.wav` plays for every unique pickup. The fifth pickup also plays `nightfall_unlock.wav` and displays `PROJECT NIGHTFALL — 5/5 SECRETS RECOVERED` without interrupting Game 10.
+- After Game 12 evacuation completes, a `5/5` mission continues through the classified transmission, Nightfall decryption, classified reveal, CASE SOLVED, and final runtime results. Fewer than five secrets shows the approved incomplete-data fallback without creating another ending.
 
 ## 5. Originally approved Games 6–12
 
@@ -246,8 +275,8 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 ### Structural status
 
 - In the original master, a player chose one route and encountered route-specific Games 4–7. Therefore **Games 6 and 7 each have three approved route variants**.
-- In the current implementation, routes are sequential: **Service Tunnels → City Streets → Main Bridge**. Games 4 and 5 have already been replaced by the current tested implementations documented above.
-- The master does not say how its three variants of Games 6 and 7 should be remapped into the newer sequential progression. **Do not choose, combine, renumber, or discard those variants without approval.**
+- In the current implementation, routes are sequential: **Service Tunnels → City Streets → Main Bridge**. Games 4 and 5 use the current tested implementations, and Game 6 now uses the approved Main Bridge — Bridge Warning System variant.
+- The approved Main Bridge Game 6 variant has now been selected for the current Main Bridge state. The remaining historical Game 6 alternatives and the final placement of Game 7 variants must not be combined, renumbered, or discarded without approval.
 - Original Games 8–12 are shared after route convergence and are recovered without route ambiguity.
 - Every recovered main game contains 4 tasks.
 
@@ -367,6 +396,11 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 
 ### Game 8 — Restore the Timeline
 
+- **Current status:** **IMPLEMENTED as Game 8 — TRAIN TIMELINE.** This newly approved implementation supersedes the older planned typed-answer description retained below for historical reference.
+- **Current mechanic:** One locomotive plus four shuffled, slowly moving candidate wagons; the player drags 3 correct wagons into their required sentence order while 1 wagon is a distractor.
+- **Wrong order / distractor:** The wagon is rejected and returned to the source track; existing Life, Energy, feedback, and recovery rules apply.
+- **Task completion:** The railway signal turns green and the assembled train departs before the next of 4 fixed tasks begins. Direct development shortcut: `?dev=game8`.
+
 - **Instruction:** `Use the timeline to complete the sentence.`
 - **Mechanic:** Interpret ordered timestamps/events and type the required verb form or forms.
 - **Rounds:** 4.
@@ -387,6 +421,8 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 
 ### Game 9 — Emergency Radio
 
+- **Current status:** **IMPLEMENTED.** Four staged transmissions use radio tuning, a slowly drifting frequency, shuffled channel selection, and final damaged-signal tuning before typed grammar restoration. Direct development shortcut: `?dev=game9`.
+
 - **Instruction:** `Complete the missing part of each message.`
 - **Mechanic:** Restore four radio messages/signals.
 - **Rounds:** 4.
@@ -403,6 +439,8 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
    - Required distinction: `as soon as we receive`, not `will receive`.
 
 ### Game 10 — Restore the Checkpoint
+
+- **Current status:** **IMPLEMENTED.** Four sequential systems restore in the locked order `CAMERA → GATE → BEACON → ACCESS`, using mission-only Batteries, Tool Kit, beacon control, and Emergency Access Card interactions before the approved grammar challenges. Direct development shortcut: `?dev=game10`.
 
 - **Structure:** Four modules in order: `CAMERA → GATE → BEACON → ACCESS`.
 - **Rounds:** 4, using four different mechanics.
@@ -431,6 +469,8 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 
 ### Game 11 — Emergency Transmission
 
+- **Current status:** **IMPLEMENTED.** Four fixed two-input grammar packets unlock 15-second transmission windows in which the moving helicopter must be clicked inside the active signal zone. Misses and reconnects carry no penalties; grammar errors reuse existing rules. Helicopter ambience is Game-11-local, loops at exactly `0.06`, and stops on Rescue/exit. Direct development shortcut: `?dev=game11`.
+
 - **Instruction:** `Complete the message with the correct verb forms.`
 - **Mechanic:** Timed/countdown transmission restoration with double-gap messages.
 - **Rounds:** 4.
@@ -449,12 +489,14 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
 
 ### Game 12 — Final Survival Challenge
 
+- **Current status:** **IMPLEMENTED.** Direct development shortcut: `?dev=game12`.
+- **Location:** Evacuation Point.
 - **Heading:** `FINAL EVACUATION CLEARANCE`
 - **Instruction:** `Complete all four tasks to authorize evacuation.`
-- **Mechanic:** Four different task types with clearance progress `0 → 25 → 50 → 75 → 100%`.
+- **Mechanic:** Four selectable environmental stations with clearance progress `0 → 25 → 50 → 75 → 100%`. Passenger registration uses multiple choice; landing lights use a typed form and sequential light activation; the security gate uses mistake selection/correction and a separately animated barrier; the landing zone requires pointer dragging three obstacles outside the marked area before its double-gap task.
 - **Rounds:** 4.
 - **Completion:** `CLEARANCE 100%`; `FINAL CLEARANCE COMPLETE ✓`; `EVACUATION AUTHORIZED`; helicopter arrival and evacuation.
-- **Associated future set:** Highway, evacuation point, helicopter, final-escape music, and results panel.
+- **Associated assets:** `assets/backgrounds/evacuation_point.png`, passenger terminal, landing lights, split security-gate base/barrier, conveyor box obstacles, helicopter, and the existing quiet helicopter ambience at `0.03`.
 
 1. **Choose**
    - Sentence: `All passengers ___ and are ready for evacuation.`
@@ -469,7 +511,7 @@ The exact approved grammar content below was recovered from `BLACKOUT_GRAMMAR_MA
    - Correct: `the pilot gives`
    - Complete sentence: `The gates will open as soon as the pilot gives the signal.`
 4. **Double Gap**
-   - Sentence: `Before the helicopter ___ (arrive), the landing zone ___ already ___ (clear).`
+   - Sentence: `Before the helicopter ___ (arrive), the landing zone ___ (already/clear).`
    - Accepted: `arrived / had already been cleared`
 
 ## 6. Recovered supplemental systems
@@ -496,8 +538,8 @@ Approved classified text and answers:
    - Accepted: `had experienced` — Past Perfect
 2. `Our engineers ___ (investigate) the energy network for the last six months.`
    - Accepted: `have been investigating` — Present Perfect Continuous
-3. `A hidden device ___ just ___ (discover) beneath the city.`
-   - Accepted: `has just been discovered` — Present Perfect Passive
+3. `Several hidden devices ___ (just/discover) beneath the city.`
+   - Accepted: `have just been discovered` — Present Perfect Passive
 4. `We believe the evidence you collected ___ (help) us uncover the truth.`
    - Accepted: `will help` — Future Simple
 
@@ -509,7 +551,7 @@ After 4/4:
 - Display `PROJECT NIGHTFALL — TRUE ENDING`
 - Award `MASTER COLLECTOR`
 
-The content is confirmed, but runtime collectible placement, decryption gameplay, unlock handling, achievement awarding, and TRUE ENDING display are not yet implemented.
+The approved content is implemented as one four-row terminal. Correct rows lock independently and advance the classified reveal by 25%; wrong answers remain editable without Life or Energy penalties. Completing all four rows awards the confirmed `MASTER COLLECTOR` achievement, reveals the classified story, and proceeds to the single final mission-results screen.
 
 ## 7. Superseded master-plan conflicts
 
@@ -527,8 +569,6 @@ The following older master rules must not overwrite the current tested game:
 
 ## 8. Development log
 
-## 6. Development log
-
 ### 2026-08-26
 
 - Established `GAME_MASTER_PLAN.md` as the permanent single source of truth for major BLACKOUT decisions.
@@ -541,6 +581,13 @@ The following older master rules must not overwrite the current tested game:
 - Recovered and documented the exact approved Games 6–12 questions, answers, instructions, mechanics, and completion concepts.
 - Preserved the unresolved mapping of the three route-specific Game 6 and Game 7 variants rather than guessing how they fit the newer sequential route order.
 - Recorded all identified conflicts with current Games 1–5, sequential routes, Energy, and Emergency Rescue as superseded older rules.
+- Implemented current Game 6 — Bridge Warning System as the approved Main Bridge route variant, with four exact double-gap grammar tasks, current global penalties/recovery, cinematic bridge effects, route entry, completion handoff, and `?dev=game6` testing support.
+- Implemented Main Bridge Game 7 — Rooftop Signal Intercept with four locked moving-drone tasks, existing penalties/recovery, Main Bridge completion, Game 8 handoff, and `?dev=game7` testing support.
+- Implemented the five Project Nightfall environmental collectibles with persistent per-mission duplicate-safe state, HUD `0/5` integration, shared pickup presentation, pickup/unlock sounds, fixed scene placements, and DEV scene histories; the Nightfall challenge and TRUE ENDING remain deliberately unlaunched.
+- Implemented the post–Game 12 Project Nightfall ending flow, including the classified transition, one-screen four-line decryption challenge, progressive file decoding, classified story, CASE SOLVED moment, actual Score/Time results, earned-only achievement display, complete PLAY AGAIN reset, and `?dev=nightfall` / `?dev=ending` shortcuts.
+- Updated Nightfall line 3 and its decoded story to the approved plural-device wording; the complete classified file now remains visible until CONTINUE, and the final results use the cinematic evacuation background with expanded statistics and achievement presentation.
+- Refined the classified-file reveal into a centered futuristic terminal with a 6–8 second character-by-character report, blinking cursor, delayed CONTINUE control, and the five evidence assets arranged systematically around—but never over—the terminal.
+- Added duplicate-safe fallback opportunities for missed Nightfall IDs: Medallion in Game 2, USB in Game 4, Processor in Game 6, Field Notes in Game 10, and every still-missing ID in Game 12. Game 12 departure now waits at `PROJECT NIGHTFALL SIGNAL DETECTED` until the player clicks the remaining visible secrets; nothing is awarded automatically.
 
 ## 9. Continuity rule
 
