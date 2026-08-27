@@ -36,7 +36,7 @@ const STREET_SIGNALS_DATA = Object.freeze([
 ]);
 const SUPPLY_SEARCH_DATA = Object.freeze([
   {sentence:'When the blackout started, I ___ (look) for some water.',answer:'was looking',reward:'Water Bottle',asset:ASSETS.items.waterBottle},
-  {sentence:'The first-aid supplies ___ already ___ (pack).',answer:'have been packed',reward:'First Aid Kit',asset:ASSETS.items.firstAidKit},
+  {sentence:'The first-aid supplies ___ (already/pack).',answer:'have already been packed',reward:'First Aid Kit',asset:ASSETS.items.firstAidKit},
   {sentence:'By the time we reached the supply room, someone ___ (take) most of the food.',answer:'had taken',reward:'Chocolate Bar',asset:ASSETS.items.chocolateBar},
   {sentence:'Emergency batteries ___ (store) in this room every week.',answer:'are stored',reward:'Batteries',asset:ASSETS.items.batteries}
 ]);
