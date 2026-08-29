@@ -82,4 +82,5 @@
 .street-grid-question{top:30.5%}.street-grid-progress{top:33%}.street-power-grid{top:44%}.street-signal.signal-1{top:50%}.street-signal.signal-2{top:55%}.street-signal.signal-3{top:76%}.street-signal.signal-4{top:79%}.street-grid-complete .street-power-grid{top:34%}.street-grid-complete .street-grid-progress{top:32%}
 .nightfall-header{top:31%}.nightfall-terminal{top:44%;bottom:2%}
 .route-selection .route-instruction{bottom:4%}.signal-tunnel-choice span{top:calc(4% + 12px)}
+.nightfall-form .nightfall-unlock-status{position:static;min-height:1.35em;margin-top:.55em;color:#88ffc0;font:900 clamp(10px,1.15vw,16px) system-ui;letter-spacing:.12em;text-align:center;text-shadow:0 0 10px #43dc89}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.signal-drone{animation:none!important;left:calc(2% + var(--lane) * 24%);top:38%}}
