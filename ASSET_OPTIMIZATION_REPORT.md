@@ -57,7 +57,6 @@ Optimization date: 2026-08-25. This phase created derivatives only. Original ass
 | `assets/achievements/speed_runner.png` | `assets/optimized/achievements/speed_runner.png` | 2.47 MiB | 0.69 MiB | 1312×1199 → 640×585 | 71.9% |
 | `assets/achievements/unstoppable.png` | `assets/optimized/achievements/unstoppable.png` | 2.56 MiB | 0.70 MiB | 1300×1209 → 640×595 | 72.9% |
 | `assets/achievements/untouchable.png` | `assets/optimized/achievements/untouchable.png` | 2.57 MiB | 0.72 MiB | 1286×1223 → 640×608 | 71.9% |
-| `assets/sounds/city_rain.wav` | `assets/optimized/sounds/city_rain.mp3` | 31.88 MiB | 1.93 MiB | 2117 kbps → 128 kbps | 93.9% |
 | `assets/sounds/underground.wav` | `assets/optimized/sounds/underground.mp3` | 8.32 MiB | 0.50 MiB | 2117 kbps → 128 kbps | 93.9% |
 | `assets/sounds/danger.mp3` | `assets/optimized/sounds/danger.mp3` | 8.63 MiB | 4.32 MiB | 320 kbps → 160 kbps | 50.0% |
 | `assets/sounds/exploration.mp3` | `assets/optimized/sounds/exploration.mp3` | 3.04 MiB | 1.90 MiB | 256 kbps → 160 kbps | 37.5% |

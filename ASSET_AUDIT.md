@@ -14,7 +14,6 @@ Audit date: 2026-08-25. Original assets were inspected recursively and left unto
 
 | Asset | Current size | Dimensions/type |
 |---|---:|---|
-| `assets/sounds/city_rain.wav` | 31.88 MiB | WAV |
 | `assets/sounds/danger.mp3` | 8.63 MiB | MP3 |
 | `assets/sounds/underground.wav` | 8.32 MiB | WAV |
 | `assets/sounds/final_escape.mp3` | 3.24 MiB | MP3 |
@@ -42,7 +41,6 @@ Text-bearing UI panels range from about 1.4–2.9 MiB. They should retain enough
 | Achievement icons | 512×512 or 640×640 | optimized transparent PNG/WebP after QA | 60–80% |
 | Collectibles | 640–900 px longest edge, preserving fine detail | optimized transparent PNG/WebP after QA | 45–70% |
 | Full-screen text-bearing UI | retain current dimensions initially | optimized PNG or lossless WebP after side-by-side text QA | 15–40% |
-| `city_rain.wav`, `underground.wav` | retain duration/channels only as needed | browser-compatible compressed ambience (for example MP3) | 80–95% |
 | Existing large MP3 tracks | retain masters, evaluate bitrate/duration | lower-bitrate MP3 derivative after listening test | 25–60% |
 
 Potential aggregate reduction is approximately **110–155 MiB** (roughly 53–74%), subject to visual and listening QA. No optimized copies have been created.
