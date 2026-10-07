@@ -18,7 +18,12 @@ try:
     base = 'http://127.0.0.1:%d/electricity_game/' % server.server_port
     manifest = (ROOT / 'release-assets.js').read_text()
     urls = list(json.loads(manifest.split('Object.freeze(', 1)[1].rsplit(');', 1)[0]).values())
-    html = urlopen(base).read().decode()
+    outer_html = urlopen(base).read().decode()
+    game_url = re.search(r'src="(game\.html\?v=[a-f0-9]+)"', outer_html).group(1)
+    with urlopen(base + game_url) as response:
+        game_bytes = response.read()
+        assert hashlib.sha256(game_bytes).hexdigest()[:20] == game_url.split('?v=')[1]
+    html = game_bytes.decode()
     urls += re.findall(r'(?:href|src)="((?:style\.css|script\.js|release-assets\.js)\?v=[a-f0-9]+)"', html)
     assert len(urls) >= 84
     for resource in urls:
@@ -27,7 +32,7 @@ try:
             content = response.read()
             assert hashlib.sha256(content).hexdigest()[:20] == resource.split('?v=')[1], resource
     assert urlopen(base + '.nojekyll').read() == b''
-    print('PASS: stable entry page, .nojekyll, and %d versioned resources under /electricity_game/; all content hashes match.' % len(urls))
+    print('PASS: stable outer entry, versioned game document, .nojekyll, and %d versioned resources under /electricity_game/; all content hashes match.' % len(urls))
 finally:
     server.shutdown()
     server.server_close()

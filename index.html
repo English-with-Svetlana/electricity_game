@@ -5,35 +5,44 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#03070b">
   <title>BLACKOUT — Grammar Survival Mission</title>
-  <link rel="stylesheet" href="style.css?v=602f248308e7105a25ca">
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000}
+    #embed-viewport{position:fixed;inset:0;overflow:hidden;background:#000}
+    /* The child document owns every game coordinate; only this wrapper scales. */
+    #stage-fit{position:absolute;left:50%;top:50%;width:1536px;height:864px;transform-origin:center;transform:translate(-50%,-50%) scale(var(--stage-scale,0))}
+    #game-frame{display:block;width:100%;height:100%;border:0;background:#000}
+  </style>
 </head>
 <body>
-  <main id="viewport" aria-label="BLACKOUT educational survival game">
-    <section id="game" class="game-shell">
-      <div id="loading" class="loading-screen" aria-live="polite">
-        <h1>BLACKOUT</h1><p>LOADING...</p>
-        <div class="load-track"><span id="load-bar"></span></div><output id="load-value">0%</output>
-      </div>
-
-      <section id="screen" class="screen" aria-live="polite"></section>
-
-      <header id="hud" class="hud hidden" aria-label="Mission status">
-        <img data-src="assets/optimized/lossless/ui/hud_panel.webp?v=b36af6e707647b0df650" alt="" draggable="false">
-        <div id="hud-lives" class="hud-lives" aria-label="Lives"></div>
-        <div class="energy-bar"><span id="energy-fill"></span></div>
-        <output id="hud-energy" class="sr-only">100 energy</output>
-        <output id="hud-score" class="hud-score">0</output>
-        <output id="hud-time" class="hud-time">00:00</output>
-        <output id="hud-secrets" class="hud-secrets">0/5</output>
-        <button id="backpack" class="hotspot backpack" type="button" title="Backpack" aria-label="Backpack" aria-expanded="false"><span class="backpack-content"><span class="backpack-icon" aria-hidden="true"></span><span id="backpack-count" class="backpack-count">0/4</span></span></button>
-      </header>
-
-      <div id="feedback" class="feedback" role="status" aria-live="assertive"></div>
-      <button id="audio-toggle" class="audio-toggle" type="button" aria-label="Audio settings" aria-expanded="false">🔊</button>
-      <div id="modal-root"></div>
-    </section>
+  <main id="embed-viewport" aria-label="BLACKOUT educational survival game">
+    <div id="stage-fit">
+      <iframe id="game-frame" src="game.html?v=bbaf3611cfba29860d0d" width="1536" height="864" title="BLACKOUT game" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
   </main>
-  <script src="release-assets.js?v=6a86a389e5cb0c09776d"></script>
-  <script src="script.js?v=dc1220bc27e85cf99b8c"></script>
+  <script>
+    // These dimensions match the optimized 16:9 backgrounds. The original game
+    // itself had a responsive shell, not an explicit fixed native pixel size.
+    const frame=document.querySelector('#game-frame');
+    const wrapper=document.querySelector('#stage-fit');
+    const viewport=document.querySelector('#embed-viewport');
+    const stageWidth=Number(frame.getAttribute('width'));
+    const stageHeight=Number(frame.getAttribute('height'));
+    // Forward existing local review links without changing their game behavior.
+    const target=new URL(frame.getAttribute('src'),document.baseURI);
+    for(const [name,value] of new URLSearchParams(location.search)){
+      if(name!=='v')target.searchParams.append(name,value);
+    }
+    target.hash=location.hash;
+    if(location.search||location.hash)frame.src=target.href;
+    function fitStage(){
+      const scale=Math.min(viewport.clientWidth/stageWidth,viewport.clientHeight/stageHeight);
+      wrapper.style.setProperty('--stage-scale',String(Math.max(0,scale)));
+    }
+    fitStage();
+    window.addEventListener('resize',fitStage);
+    if(typeof ResizeObserver!=='undefined')new ResizeObserver(fitStage).observe(viewport);
+    window.visualViewport?.addEventListener('resize',fitStage);
+  </script>
 </body>
 </html>

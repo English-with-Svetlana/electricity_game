@@ -9,8 +9,8 @@ const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex').slice(
 const assetPattern=/assets\/[^\s'"<>`?)]+\.(?:webp|png|jpe?g|svg|mp3|wav|ogg)/g;
 function prepare(overrides=new Map()) {
  const read=file=>overrides.get(file)??fs.readFileSync(path.join(root,file));
- const script=read('script.js').toString(),css=read('style.css').toString(),html=read('index.html').toString();
- for(const [name,text] of [['script.js',script],['style.css',css],['index.html',html]]) {
+ const script=read('script.js').toString(),css=read('style.css').toString(),html=read('game.html').toString(),outerHtml=read('index.html').toString();
+ for(const [name,text] of [['script.js',script],['style.css',css],['game.html',html],['index.html',outerHtml]]) {
   if(/(?:["'`(=])\s*\/(?:assets\/|script\.js|style\.css)|localhost:\d|\/Users\//.test(text))throw Error(`Unsafe deployment path in ${name}`);
  }
  const context=vm.createContext({});
@@ -34,7 +34,9 @@ function prepare(overrides=new Map()) {
  const nextCss=versionAssets(css);
  let nextHtml=versionAssets(html).replace(/(?:  )?<script src="release-assets\.js(?:\?v=[a-f0-9]+)?"><\/script>\n?/g,'');
  nextHtml=nextHtml.replace(/href="style\.css(?:\?v=[a-f0-9]+)?"/,`href="style.css?v=${hash(nextCss)}"`).replace(/<script src="script\.js(?:\?v=[a-f0-9]+)?"><\/script>/,`<script src="release-assets.js?v=${hash(manifest)}"></script>\n  <script src="script.js?v=${hash(script)}"></script>`);
- return {urls,outputs:{'release-assets.js':manifest,'style.css':nextCss,'index.html':nextHtml,'.nojekyll':''}};
+  const nextOuterHtml=outerHtml.replace(/src="game\.html(?:\?v=[a-f0-9]+)?"/,`src="game.html?v=${hash(nextHtml)}"`);
+ if(nextOuterHtml===outerHtml&&!outerHtml.includes(`src="game.html?v=${hash(nextHtml)}"`))throw Error('Missing fixed-stage entry reference');
+ return {urls,outputs:{'release-assets.js':manifest,'style.css':nextCss,'game.html':nextHtml,'index.html':nextOuterHtml,'.nojekyll':''}};
 }
 function simulation() {
  const a=prepare(),b=prepare();

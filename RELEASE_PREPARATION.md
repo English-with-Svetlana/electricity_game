@@ -12,7 +12,7 @@ node tools/prepare-release.mjs
 ```
 
 Edit ordinary source files and assets normally. Never edit hashes manually.
-Commit the generated index.html, style.css and release-assets.js along with changed
+Commit the generated index.html, game.html, style.css and release-assets.js along with changed
 source/assets and .nojekyll in the separately authorized publishing phase.
 The generator has no npm dependencies and uses paths relative to its own location.
 
@@ -41,14 +41,47 @@ ASSETS, dynamic evidence/achievement paths and SECTION_ASSETS therefore use the
 same URLs for preload, readiness and rendering. Directory roots stay relative
 and unversioned. CSS URLs and HTML data-src use those same per-resource digests.
 
-index.html references content hashes for script.js, generated style.css and
-release-assets.js. A JS edit changes only the JS reference. A CSS edit changes
+game.html references content hashes for script.js, generated style.css and
+release-assets.js. The stable outer index.html references a content hash for
+game.html, so any changed child HTML or runtime reference updates its URL too. A JS edit changes only the JS reference. A CSS edit changes
 its stylesheet reference. An asset edit changes that asset's URL and the manifest
 reference; CSS also changes if it refers to that asset. Unchanged large assets
 retain their exact URLs. The stable entry page itself has no release suffix.
 Regeneration is deterministic and independent of file modification times.
 
-## Local verification on 2026-10-07
+## Outer Genially fitting correction
+
+The stable index.html now contains only a black fitting viewport and a fixed-size
+same-origin iframe loading game.html. It scales the whole iframe wrapper by
+min(availableWidth / 1536, availableHeight / 864), centered in both axes.
+The child viewport never resizes with the outer iframe. The outer controller
+never reads or changes internal game elements. Existing local debug parameters
+are forwarded to the child without removing its generated content hash.
+
+script.js and style.css, and the entry markup now in game.html, were restored
+byte-for-byte from commit 59649b5. The previous internal vw/vh rewrites,
+1440x810 game-shell layout, in-game resizing controller and checkpoint coordinate
+changes were reverted. The original game's CSS had a responsive 16:9 shell,
+not a declared fixed native pixel size. 1536x864 is the reference selected from
+the optimized background artwork; it is not proof of the viewport used in the
+owner's known-good visual review.
+
+Source equality covers every original screen, including the Game 5 engineers
+sentence. Outer-controller checks passed at 1536x864, 1920x1080, 2560x1080,
+1024x768, 1000x600, 800x450, 600x500, 390x844, 844x390 and 320x180; resize
+callbacks changed only the outer scale. These are controller/geometry checks,
+not browser screenshots or computed-style comparisons. No browser was connected.
+Nested iframe rendering, audio gesture behavior and live interaction still need
+browser/Genially QA. The published entry URL remains unchanged. White space
+outside the game iframe belongs to Genially and is not addressed by internal
+layout changes.
+
+The release utility and subpath test now include game.html. JS/CSS/media A/B
+identity checks and HTTP verification of the stable outer entry, hashed child
+HTML and all 84 runtime/code resources pass. All asset bytes and the asset
+manifest remain unchanged. No commits or pushes were made during this correction.
+
+## Earlier local verification on 2026-10-07
 
 - 81 canonical image/audio files validated against the filesystem.
 - All 20 section readiness groups validated against the generated URL map,
