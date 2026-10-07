@@ -1,3 +1,20 @@
-
+# Local machine and editor artifacts (already tracked files need separate cleanup).
 .DS_Store
 **/.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.swp
+*~
+.vscode/
+.idea/
+node_modules/
+__pycache__/
+# Internal optimization reports retained locally.
+PERFORMANCE_ASSET_BASELINE.json
+PERFORMANCE_IMAGE_RESULTS.json
+PERFORMANCE_RUNTIME_ASSETS.json
+PERFORMANCE_OPTIMIZATION_REPORT.md
+# Runtime assets, release-assets.js, and .nojekyll MUST remain tracked.
