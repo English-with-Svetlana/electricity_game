@@ -177,7 +177,7 @@ const RESCUE_QUESTION_POOL = Object.freeze([
 let rescueQuestion=null,previousRescueQuestionId=null,rescueContext=null;
 
 class AudioManager {
-  constructor(){let saved={};try{saved=JSON.parse(localStorage.getItem('blackout.audio')||'{}')||{};}catch{}this.musicVolume=this.validVolume(saved.musicVolume,.35);this.sfxVolume=this.validVolume(saved.sfxVolume,.70);this.muted=typeof saved.muted==='boolean'?saved.muted:false;this.enabled=false;this.music=null;this.ambience=null;this.cache=new Map();this.sfxPools=new Map();this.loopCache=new Map();this.activeSfx=new Set();this.sfxPreloadPromises=new Map();this.sfxReleaseHandlers=new WeakMap();this.sfxPlaybackVersions=new WeakMap();}
+  constructor(){let saved={};try{saved=JSON.parse(localStorage.getItem('blackout.audio')||'{}')||{};}catch{}this.musicVolume=this.validVolume(saved.musicVolume,1);this.sfxVolume=this.validVolume(saved.sfxVolume,.70);this.muted=typeof saved.muted==='boolean'?saved.muted:false;this.enabled=false;this.music=null;this.ambience=null;this.cache=new Map();this.sfxPools=new Map();this.loopCache=new Map();this.activeSfx=new Set();this.sfxPreloadPromises=new Map();this.sfxReleaseHandlers=new WeakMap();this.sfxPlaybackVersions=new WeakMap();}
   validVolume(value,fallback){const number=Number(value);return Number.isFinite(number)&&number>=0&&number<=1?number:fallback;}
   unlock(){this.enabled=true;}
   prepareSfxElement(sound){return new Promise(resolve=>{sound.preload='auto';if(sound.readyState>=4){resolve();return;}let timeout;const ready=()=>{clearTimeout(timeout);sound.removeEventListener('canplaythrough',ready);sound.removeEventListener('error',ready);resolve();};sound.addEventListener('canplaythrough',ready,{once:true});sound.addEventListener('error',ready,{once:true});timeout=setTimeout(ready,1500);sound.load();});}
@@ -192,7 +192,7 @@ class AudioManager {
   targetVolume(track){const baseGain=BACKGROUND_TRACK_GAINS[track?.dataset.track]??1;return this.muted?0:baseGain*this.musicVolume*Number(track?.dataset.scale||1);}
   fade(track,target){clearInterval(track.fadeTimer);track.fadeTimer=setInterval(()=>{const difference=target-track.volume;if(Math.abs(difference)<.025){track.volume=target;clearInterval(track.fadeTimer);return;}track.volume=Math.max(0,Math.min(1,track.volume+Math.sign(difference)*.02));},40);}
   stopLoop(channel){const track=this[channel];if(!track)return;clearInterval(track.fadeTimer);track.pause();this[channel]=null;}
-  setMusicVolume(value){this.musicVolume=this.validVolume(value,.35);for(const track of [this.music,this.ambience])if(track)this.fade(track,this.targetVolume(track));this.persist();}
+  setMusicVolume(value){this.musicVolume=this.validVolume(value,1);for(const track of [this.music,this.ambience])if(track)this.fade(track,this.targetVolume(track));this.persist();}
   setSfxVolume(value){this.sfxVolume=this.validVolume(value,.70);this.syncActiveSfxVolume();this.persist();}
   toggleMute(){this.muted=!this.muted;if(helicopterAmbience)helicopterAmbience.volume=this.muted?0:.03;for(const track of [this.music,this.ambience])if(track)this.fade(track,this.targetVolume(track));this.syncActiveSfxVolume();this.persist();return this.muted;}
 }
