@@ -111,7 +111,7 @@ const ERROR_DETECTOR_DATA = Object.freeze([
 // Locked Game 6 dataset: change only with explicit approval.
 const BRIDGE_WARNING_DATA = Object.freeze([
   {before:'People ',between:' the bridge when the first warning ',after:'.',prompts:['cross','send'],answers:['were crossing','was sent']},
-  {before:'Sensors ',between:' a problem, but the bridge still ',after:' stable.',prompts:['detect','look'],answers:['detected','looks']},
+  {before:'Sensors ',between:' a problem, but the bridge still ',after:' stable.',prompts:['detect','look'],answers:['have detected','looks']},
   {before:'The engineers ',between:' the control system when the emergency barrier ',after:'.',prompts:['check','lower'],answers:['were checking','lowered']},
   {before:'Engineers ',between:' the sensor data for an hour, but no safe route ',after:' yet.',prompts:['check','find'],answers:['have been checking','has been found']}
 ]);
